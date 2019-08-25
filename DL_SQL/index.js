@@ -25,8 +25,20 @@ async function create(table, item) {
     return query(q)
 }
 
-async function read(table) {
-    return query(`SELECT * FROM ${table}`)
+async function read(table, id) {
+    let q = `SELECT * FROM ${table} `
+    if (id) q += `WHERE id='${id}'`
+    
+    const res = await query(q)
+    return id ? res[0] : res
+}
+
+async function update(table, product) {
+    const res = await query(`UPDATE ${table} SET name='${product.name}', image='${product.image}', price='${product.price}' WHERE id=${product.id}`)
+
+    if (res.affectedRows == 1)
+        return read(table, product.id)
+    throw 'update failed'
 }
 
 con.connect(async err => {
@@ -52,4 +64,4 @@ con.connect(async err => {
     */
 })
 
-module.exports = { create, read }
+module.exports = { create, read, update }

@@ -7,6 +7,17 @@ function Router(app) {
         res.send(result)
     })
 
+    app.put(`/products`, async (req, res) => {
+        try {
+            const { body } = req,
+                result = await BL.products.update(body)
+
+            res.send(result)
+        } catch (error) {
+            res.send({ error })
+        }
+    })
+
 }
 
 module.exports = Router
