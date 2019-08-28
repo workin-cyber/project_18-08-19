@@ -25,19 +25,28 @@ async function create(table, item) {
     return query(q)
 }
 
-async function read(table, id) {
+async function read(table, filter = {}) {
     let q = `SELECT * FROM ${table} `
-    if (id) q += `WHERE id='${id}'`
-    
+
+    const keys = Object.keys(filter)
+    if (keys.length) {
+        q += 'WHERE '
+
+        for (const key in filter) {
+            const value = filter[key];
+            q += `${key}='${value}' `
+        }
+    }
+    console.log(q)
     const res = await query(q)
-    return id ? res[0] : res
+    return filter.id ? res[0] : res
 }
 
 async function update(table, product) {
     const res = await query(`UPDATE ${table} SET name='${product.name}', image='${product.image}', price='${product.price}' WHERE id=${product.id}`)
 
     if (res.affectedRows == 1)
-        return read(table, product.id)
+        return read(table, { id: product.id })
     throw 'update failed'
 }
 
@@ -49,19 +58,7 @@ con.connect(async err => {
 
     await query(`CREATE TABLE IF NOT EXISTS products (id VARCHAR(255), name VARCHAR(255), categoryId VARCHAR(255), subCategoryId VARCHAR(255), price INT, image VARCHAR(255), description VARCHAR(255))`)
 
-
-    /* const productsJson = require('./products')
- 
- 
-      await Promise.all(productsJson.map(product => create('products', product)))
- 
-     console.log('done') 
-     
-     
-     const p = await read('products')
-     
-     console.log('read res:', p)
-    */
+    await query(`CREATE TABLE IF NOT EXISTS admins (id VARCHAR(255), username VARCHAR(255), password VARCHAR(255), name VARCHAR(255), image VARCHAR(255))`)
 })
 
 module.exports = { create, read, update }

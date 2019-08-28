@@ -10,5 +10,5 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 router(app)
-
-app.listen(1200, () => console.log(`Server is up! port:${1200}`))
+const port = process.env.PORT || 1200
+app.listen(port, () => console.log(`Server is up! port:${port}`))

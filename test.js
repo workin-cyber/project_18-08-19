@@ -1,4 +1,9 @@
-let num1 = 'hello '
-const num2 = num1 += 'world'
+const obj = { id: 1, name: 'sason' }
+const obj2 = {}
 
-console.log(String(num1))
+const keys = Object.keys(obj2)
+
+if (keys.length)
+    console.log('not empty')
+else
+    console.log('empty')
